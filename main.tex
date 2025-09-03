@@ -1,0 +1,388 @@
+%%%%%%%%%%%%%%%%%%%%%% PRÉAMBULE
+
+
+%%%%%%%%%%%%%% partie obligatoire du préambule
+\documentclass[12pt,twoside]{book}
+\usepackage{fontspec}
+\usepackage{xunicode}
+\usepackage{polyglossia}
+\setmainlanguage{french}%indiquer la langue principale du document
+\setotherlanguage{english} %indiquer les autres langues utilisée
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% PACKAGES UTILISÉS
+
+\usepackage{csquotes} % les guillemets français
+\usepackage{lettrine} %faire une lettrine (pas obligatoire)
+
+\usepackage[style=biblatex-enc/enc,sorting=nyt,maxbibnames=10]{biblatex}%charger le style de l'EnC (téléchargeable ici https://ctan.org/pkg/biblatex-enc)
+\addbibresource{memoire-TNAH.bib} %le fichier bibliograhique.
+%\defbibheading{}{\subsection*{}} Si l'on veut changer le titre de la/les bibliographie(s)
+
+
+%%%Faire un ou plusieurs index
+
+%\usepackage{imakeidx} %pour faire un ou plusieurs index
+%\makeindex %commande pour générer l'index
+
+
+%RAJOUTEZ ICI VOS PACKAGES
+
+% Gestion des URL et des liens
+\usepackage{url}            % Permet d'insérer et formater correctement les URL dans le texte
+
+% Packages pour l'amélioration des tableaux
+\usepackage{array}          % Offre plus d'options pour la création et la mise en forme des tableaux
+\usepackage{booktabs}       % Crée des tableaux professionnels avec des lignes horizontales élégantes
+\usepackage{tabularx}       % Génère des tableaux à largeur automatique avec colonnes flexibles
+\usepackage{longtable}      % Gère les tableaux qui s'étendent sur plusieurs pages
+\usepackage{ltxtable}       % Combine les fonctionnalités de longtable et tabularx
+
+% Couleurs et code source
+\usepackage{xcolor}         % Gestion avancée des couleurs (texte, tableaux, fond, etc.)
+\usepackage{minted}         % Affichage de code source avec coloration avancée (utilise Pygments)
+
+% Gestion des documents externes
+\usepackage{pdfpages}       % Permet d'inclure des pages PDF externes directement dans le document
+
+% Boucles et automatisation
+\usepackage{pgffor}         % Fournit des commandes pour créer des boucles dans LaTeX (utile avec TikZ ou pour des tâches répétitives)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CONFIGURATION DE MISE EN PAGE
+
+%%%%%% Les compteurs (sections, subsections, etc)
+
+
+%%%%%% Les compteurs (sections, subsections, etc)
+\renewcommand{\thesection}{\Roman{section}.}%On ne fait apparaître que le numéro de la section
+\renewcommand{\thesubsection}{\arabic{subsection}.}%subsection en chiffres arabes
+\renewcommand{\thesubsubsection}{\alph{subsubsection}.}%subsubsection en lettres minuscules
+%Si l'on veut faire apparaître les subsubsection dans le table des matières (à commenter sinon)
+\setcounter{tocdepth}{3}
+\setcounter{secnumdepth}{3}  % La subsubsection (profondeur=3 dans la table des matières) apparait numérotée dans la TdM
+
+
+
+%%%%%  Configurer le document selon les normes de l'école
+
+\usepackage[margin=2.5cm]{geometry} %marges
+\usepackage{setspace} % espacement qui permet ensuite de définir un interligne
+\onehalfspacing % interligne de 1.5
+\setlength\parindent{1cm} % indentation des paragraphes à 1 cm
+
+
+%%%%% Mise en forme des headers (haut de page)
+
+\usepackage{fancyhdr} %package utilisé pour modifier les headers
+\pagestyle{fancy} %utiliser ses propres choix de mise en page et non ceux par défaut du package
+
+\setlength\headheight{16pt}%la hauteur des headers
+
+%%la façon dont les sections apparaissent dans les en-tête:
+
+\renewcommand{\sectionmark}[1]{\markright{\small\textit{\thesection~\  #1}}}%Faire apparaître dans les headers les sections en  petit et en italiques
+%\renewcommand{\sectionmark}[1]{}%Commenter la lign précédetne et mettre celle-ci pour ne pas avoir le titre des sections dans le header
+
+%% réglages propres à frontmatter
+
+\appto\frontmatter{\pagestyle{fancy}%
+	\renewcommand{\chaptermark}[1]{\markboth{\small\textit{#1}}{}}% ne pas faire apparaître de <<numéro>> de chapitre dans les chapitres non numérotés (front: l'introduction, els remerciement, etc)
+}
+
+%% réglages propres à mainmatter
+
+\appto\mainmatter{
+	\renewcommand{\chaptermark}[1]{\markboth{\small\chaptername~\thechapter~--\ \textit{#1}}{}}%faire apparaître dans les headers les sections en  petit et en italiques
+}
+
+%% réglages propres aux annexes
+
+\appto\appendix{
+	\renewcommand{\chaptermark}[1]{\markboth{\small~Annexe \thechapter~--\ \textit{#1}}{}}%faire apparaître dans les headers le nom des annexes
+}
+
+
+%indiquer des règles d'hyphénation pour des mots précis si besoin
+%\begin{hyphenrules}{french}
+%	\hyphenation{}
+%\end{hyphenrules}
+
+
+%%%%%%% Package hyperref
+
+% A mettre après les autres appels de packages car redéfinit certaines commandes).
+
+\usepackage[colorlinks=false, breaklinks=true, pdfusetitle, pdfsubject ={Mémoire HN}, pdfkeywords={les mots-clés}]{hyperref} %
+\usepackage[numbered]{bookmark}%va avec hyperref; marche mieux pour les signets. l'option numbered: les signets dans le pdf sont numérotés
+
+% Compléter pdfsubjet et pdfkeywords
+%Explication des options de hyperref (modifiables)
+% hyperindex=false
+% colorlinks=false: pour que le cadre des liens n'apparaisse pas à l'impression
+% breaklinks permet d'avoir des liens allant sur pusieurs lignes
+%pdfusetitle: utiliser \author et \title pour produire le nom et le titre du pdf
+
+
+
+%%%%%%%%%%%%%%%%%%%% Package glossaries
+
+%Exception: il faut le charger APRÈS hyperref
+\usepackage[toc=true]{glossaries}
+\makeglossaries
+%avec TexStudio: F9 pour compiler le glossaire (s'il y a aussi un index)
+
+\loadglsentries{glossaire.tex}
+
+%Structure d'une entrée de glossaire
+%\newglossaryentry{}{%
+	%	name={},%
+	%	description={}
+	%}
+
+
+
+%%%%%%%%%%%%%%%%%% DÉFINITION DES COMMANDES ET ENVIRONNEMENTS %%%%%%%%%%%%%%%%%%
+
+% ==== Bibliographie structurée par sections ====
+
+% Définition d'un style de titre pour une sous-section de bibliographie
+% - \refname est remplacé par le nom par défaut de la bibliographie
+% - Titre imprimé sans numérotation
+% - Ajout automatique de la sous-section dans la table des matières (toc)
+\defbibheading{subbibintoc}[\refname]{%
+  \subsection*{#1}% titre affiché, non numéroté
+  \addcontentsline{toc}{subsection}{#1}} % ajout dans la table des matières
+
+% Commande personnalisée pour afficher une partie de la bibliographie
+% Paramètres :
+%   #1 = mot-clé des références à afficher (défini dans le fichier .bib)
+%   #2 = titre de la section de bibliographie
+\newcommand{\myprintbiblio}[2]{%
+  \printbibliography[heading=subbibintoc,keyword={#1},title={#2}]
+}
+
+% ==== Style pour le package minted ====
+
+% Choix d'un style visuel prédéfini pour l'affichage du code
+\usemintedstyle{tango}
+
+% ==== Commande pour du code en ligne (inline) ====
+
+% Commande générique pour insérer du code dans une ligne de texte
+% Paramètres :
+%   #1 = langage du code (ex: python, html, bash)
+%   #2 = code à afficher
+% Utilise minted avec options :
+%   - breaklines : retour automatique à la ligne si le code est trop long
+%   - breakanywhere : coupure possible à tout endroit
+%   - breakautoindent : indentation automatique lors de la coupure
+\newcommand{\codeinline}[2]{%
+  \mintinline[breaklines, breakanywhere, breakautoindent=true]{#1}{#2}%
+}
+
+% ==== Environnement pour du code multi-ligne ====
+
+% Création d'un environnement nommé "codeblock"
+% Paramètre obligatoire : langage du code (ex: python, html)
+\newenvironment{codeblock}[1]{%
+  \VerbatimEnvironment
+  \begin{minted}[
+    fontsize=\small,
+    breaklines,
+    breakanywhere,			% gestion des coupures de lignes, n'importe où
+    breakautoindent=true,	% Indentation pour les coupures de lignes
+    linenos,                % Numérotation des lignes
+    frame=single,           % Cadre simple autour du code
+    framesep=3mm,           % Espacement entre code et cadre
+    fillcolor=gray!5,       % Fond légèrement coloré
+  ]{#1}}%
+  {\end{minted}}
+
+% ==== Commande pour afficher un fichier complet ====
+
+% Permet d'inclure et afficher directement le contenu d'un fichier externe
+% Paramètres :
+%   #1 = langage du code (ex: python, html)
+%   #2 = chemin du fichier à inclure
+% Utilise les mêmes options visuelles que l'environnement codeblock
+\newcommand{\codefile}[2]{%
+  \inputminted[
+    fontsize=\small,
+    breaklines,
+    breakanywhere,
+    breakautoindent=true,
+    linenos,
+    frame=single,
+    framesep=3mm,
+    fillcolor=gray!5,
+  ]{#1}{#2}%
+}
+
+%%%%%%%%%%%%%% INFORMATIONS POUR LA PAGE DE TITRE
+
+\author{Amélie \textsc{Dogan} - M2 TNAH}
+\title{Titre du mémoire}
+
+%%%%%%%%%%%%%%%%%%%%%% DOCUMENT
+\begin{document}
+	\begin{titlepage}
+		\begin{center}
+			
+			\bigskip
+			
+			\begin{large}				
+				ÉCOLE NATIONALE DES CHARTES\\
+				UNIVERSITÉ PARIS, SCIENCES \& LETTRES
+			\end{large}
+			\begin{center}\rule{2cm}{0.02cm}\end{center}
+			
+			\bigskip
+			\bigskip
+			\bigskip
+			\begin{Large}
+				\textbf{Amélie Dogan}\\
+			\end{Large}
+			%selon le cas
+			\begin{normalsize} \textit{licenciée en histoire}
+			\end{normalsize}
+			
+			\bigskip
+			\bigskip
+			\bigskip
+			
+			\begin{Huge}
+				\textbf{Une \gls{edition-numerique} comme solution d'\gls{accessibilite} soutenable}\\
+			\end{Huge}
+			\bigskip
+			\bigskip
+			\begin{LARGE}
+				\textbf{Étude autour de la base \textit{Philidor~4} du \gls{cmbv}}\\
+			\end{LARGE}
+			
+			\bigskip
+			\bigskip
+			\bigskip
+			\begin{large}
+			\end{large}
+			\vfill
+			
+			\begin{large}
+				Mémoire 
+				pour le diplôme de master \\
+				\enquote{Technologies numériques appliquées à l'histoire} \\
+				\bigskip
+				2025
+			\end{large}
+			
+		\end{center}
+	\end{titlepage}
+	
+	\thispagestyle{empty}	
+	\cleardoublepage
+	
+	\frontmatter
+	
+	\chapter{Résumé}
+	
+	\paragraph{En français} À l'ère numérique, les institutions patrimoniales font face à un défi majeur : comment rendre accessibles en ligne les corpus de données pour des publics diversifiés ? Ce mémoire explore cette tension à travers l'étude du \glslink{cmbv}{Centre de musique baroque de Versailles} et de sa base de données \textit{Philidor 4}. Ce travail examine l'évolution des outils numériques du \gls{cmbv} depuis trente ans et analyse les mutations qui ont accompagné le développement des bases de données patrimoniales. L'étude révèle comment la base de données \textit{Philidor 4} cristallise les enjeux contemporains de valorisation du patrimoine musical. Si son architecture répond aux exigences scientifiques, elle génère également des barrières ergonomiques qui limitent son appropriation. Face à ces constats, ce mémoire explore l'édition numérique statique comme solution complémentaire. À travers le développement d'un prototype \glslink{xml}{XML}/\glslink{xslt}{XSLT}, il démontre comment la transformation éditoriale des données peut produire des parcours thématiques plus accessibles et économiquement soutenables.
+	
+	\medskip
+	
+	\begin{english}
+		\paragraph{In english} In the digital age, heritage institutions face a major challenge: how to make data collections accessible online to diverse audiences? This thesis explores this tension through a study of the \glslink{cmbv}{Centre de musique baroque de Versailles} and its \textit{Philidor 4} database. This work examines the evolution of the \gls{cmbv}'s digital tools over the past thirty years and analyzes the changes that have accompanied the development of heritage databases. The study reveals how the \textit{Philidor 4} database crystallizes the contemporary challenges of promoting musical heritage. While its architecture meets scientific requirements, it also creates ergonomic barriers that limit
+		its appropriation. In light of these findings, this thesis explores static digital publishing as a complementary solution. Through the development of an \glslink{xml}{XML}/\glslink{xslt}{XSLT} prototype, it demonstrates how the editorial transformation of data can produce more accessible and economically sustainable thematic pathways.
+	\end{english}
+	
+	\newpage
+	
+	\textbf{Mots-clés:} patrimoine musical, bases de données, accessibilité numérique, édition numérique statique, Centre de musique baroque de Versailles, Philidor, valorisation patrimoniale, médiation culturelle, musique baroque française, interopérabilité, ergonomie, architecture modulaire, XML, XSLT, institutions culturelles, numérisation patrimoniale, médiation numérique, éco-conception, sobriété numérique, transformation éditoriale, parcours thématiques, appropriation des données, musicologie numérique, humanités numériques.
+	
+	\textbf{Informations bibliographiques:} Amélie Dogan, \textit{Une \gls{edition-numerique} comme solution d'\gls{accessibilite} soutenable. Étude autour de la base \textit{Philidor~4} du \gls{cmbv}}, mémoire de master \enquote{Technologies numériques appliquées à l'histoire}, dir. Emmanuelle Bermès, École nationale des chartes, 2025.
+	
+	\newpage{\pagestyle{empty}\cleardoublepage}
+	
+	\chapter{Remerciements}
+	
+	\lettrine{C}e mémoire n'aurait pu voir le jour sans le concours et le soutien de nombreuses personnes que je souhaite remercier chaleureusement. Ma reconnaissance va d'abord à Mme Emmanuelle Bermès, ma directrice de mémoire, pour ses conseils éclairés, sa disponibilité et l'exigence scientifique qu'elle a su maintenir tout au long de ce travail. Ses relectures attentives et ses orientations méthodologiques ont été déterminantes dans l'aboutissement de cette recherche.
+	
+	Je tiens à exprimer ma profonde gratitude à l'équipe du \glslink{cmbv}{Centre de musique baroque de Versailles} qui m'a accueilli et accompagné avec une générosité remarquable. Mes remerciements s'adressent tout particulièrement à Julien Charbey, pour ses éclairages précieux sur l'histoire institutionnelle du \gls{cmbv}, à Laurent Guillo, pour m'avoir communiqué les archives des projets \textit{Philidor} et pour ses retours sur mon travail, et à Marco Lo Cascio, pour sa disponibilité et ses conseils. Leur confiance et leur ouverture ont rendu possible cette plongée dans l'univers complexe et passionnant des bases de données patrimoniales.
+	
+	Plus largement, je remercie l'ensemble du personnel du \gls{cmbv} pour leur accueil et leur contribution à ma compréhension des enjeux contemporains de la valorisation du patrimoine musical.
+	
+	Ma gratitude s'étend également à l'École nationale des chartes, à ses enseignants et à mes camarades de classe qui, par la richesse des échanges et des débats, a nourri ma réflexion et affiné ma méthode de travail.
+	
+	Je souhaite également remercier mes amis qui, par leurs encouragements constants et leur soutien moral, ont rendu ce parcours plus serein.
+	
+	Enfin, mes remerciements vont à ma famille, et notamment à ma maman dont les relectures bienveillantes et les questionnements ont contribué à clarifier ma pensée et à enrichir mon propos.
+	
+	Que tous ceux qui ont contribué, de près ou de loin, à l'accomplissement de ce travail trouvent ici l'expression de ma sincère reconnaissance.
+	
+	\newpage{\pagestyle{empty}\cleardoublepage}
+	
+	%%%%%%%%%%%% \bibliographie ici (normes de l'EnC)
+	\input{bibliographie.tex}
+	
+	
+	\chapter{Introduction}	
+	
+	\input{introduction.tex}
+	
+	\newpage{\pagestyle{empty}\cleardoublepage}
+	
+	%%%%%%%%%%%%%%%%%Le corps du mémoire
+	\mainmatter
+	%Trier par dossiers si besoin (front, main,annexes,), se crérer un docuemnt .tex par structure (section ou chapter selon la taille et la pertinence) Exemple de chemin à partir du dossier où se trouve le document maître: ./dossierA/fichier.tex
+	
+	
+	
+	\part[La patrimoine musical]{Le patrimoine musical numérique : enjeux institutionnels et défis techniques}
+	
+	La transformation numérique des institutions patrimoniales résulte d'un processus complexe, fait d'adaptations progressives, d'expérimentations techniques et de reconfigurations organisationnelles qui s'étalent sur plusieurs décennies. Pour comprendre les enjeux contemporains d'\gls{accessibilite} des bases de données patrimoniales, il convient d'abord de saisir les mutations profondes qui ont traversé ces institutions depuis l'avènement de l'informatique documentaire.
+	
+	Le \glslink{cmbv}{Centre de Musique Baroque de Versailles} offre un terrain d'observation privilégié de ces transformations. Institution hybride, à la fois centre de recherche, organisme de diffusion artistique et service de \gls{mediationculturelle}, le \gls{cmbv} a dû concilier des missions multiples tout en s'adaptant aux évolutions technologiques successives. Son parcours illustre les défis auxquels sont confrontées toutes les institutions patrimoniales : comment préserver et valoriser des corpus anciens avec les outils du présent ? Comment articuler exigences scientifiques, contraintes budgétaires et attentes des publics ?
+	
+	Cette première partie propose une analyse de ces mutations à travers deux prismes complémentaires. Le premier chapitre examine les enjeux institutionnels auxquels le \gls{cmbv} a dû faire face : redéfinition de ses missions à l'ère numérique, adaptation à de nouveaux publics, gestion des contraintes économiques et réglementaires. Le second chapitre retrace l'histoire technique des outils numériques utilisés par l'institution, depuis les premières bases de données jusqu'aux solutions contemporaines. Cette approche diachronique permet de comprendre comment les choix techniques d'hier conditionnent les possibilités d'aujourd'hui, et comment les institutions patrimoniales naviguent entre innovation et continuité, entre ambitions et contraintes.
+	
+	\input{chapitre1.tex}
+	
+	\input{chapitre2.tex}
+	
+	\part[De la base de données à l'\gls{edition-numerique}]{De la base de données à l'\gls{edition-numerique} : analyse et réinvention du corpus \textit{Philidor~4}} \label{part2}
+	
+	Si la première partie a permis de comprendre le contexte institutionnel et historique dans lequel s'inscrivent les outils numériques du \gls{cmbv}, cette seconde partie se concentre sur l'analyse approfondie de la solution actuelle et sur l'exploration de voies alternatives. \textit{Philidor~4}, mise en ligne en 2019, représente l'aboutissement de trente années d'évolution technique. Mais cet aboutissement révèle aussi les limites structurelles des approches traditionnelles de valorisation des données patrimoniales.
+	
+	Cette partie adopte une approche à la fois analytique et prospective. Elle examine d'abord la base \textit{Philidor~4} dans ses dimensions techniques, ergonomiques et fonctionnelles, en identifiant ses forces et ses faiblesses. Cette analyse critique ne vise pas à dénoncer les insuffisances d'un outil, mais à comprendre les contraintes systémiques qui pèsent sur toute interface de base de données patrimoniale. Elle révèle notamment la tension fondamentale entre richesse informationnelle et facilité d'accès, entre exhaustivité et navigation intuitive.
+	
+	Fort de cette analyse, le second chapitre explore une voie alternative : l'\gls{edition-numerique} statique. Cette approche ne prétend pas remplacer les bases de données existantes, mais offrir une modalité complémentaire de valorisation, plus éditoriale et contextualisée. À travers le développement d'un prototype de site web généré automatiquement à partir des données de \textit{Philidor~4}, cette partie démontre les potentialités d'une approche qui transforme les données en récits, les corpus en parcours de découverte.
+	
+	Cette démarche expérimentale permet d'interroger concrètement les modalités contemporaines de \glslink{mediationculturelle}{médiation} patrimoniale. Elle questionne les formes d'éditorialisation adaptées aux données structurées, explore les possibilités techniques des architectures statiques, et analyse les enjeux de soutenabilité qui traversent aujourd'hui le secteur patrimonial.
+	
+	\input{chapitre3.tex}
+	
+	\input{chapitre4.tex}
+	
+	\chapter*{Conclusion}
+	\addcontentsline{toc}{chapter}{Conclusion}
+	
+	\input{conclusion.tex}
+	
+	\newpage{\pagestyle{empty}\cleardoublepage}
+	
+	%%%%%%%%%%%%%%%%%%
+	
+	\appendix %Des appendices: tables figures, etc
+	
+	\input{annexes.tex}
+	
+	\newpage{\pagestyle{empty}\cleardoublepage}
+	
+	%%%%%%%%%%%%%%%%%%
+	
+	\backmatter % glossaire, index, table des figures, table des matières.. (la bibliographie a déjà été appelée)
+	
+	%\printindex
+	\printglossaries
+	\listoftables
+	\listoffigures
+	\tableofcontents
+\end{document}
